@@ -1,0 +1,926 @@
+{
+  "datasets": [
+    {
+      "name": "revenue_gap_by_state",
+      "displayName": "Revenue Gap by State",
+      "queryLines": [
+        "SELECT\n",
+        "  provider_state,\n",
+        "  total_revenue_gap\n",
+        "FROM\n",
+        "  rcm_platform.rcm_gold.kpi_by_state\n",
+        "ORDER BY\n",
+        "  total_revenue_gap DESC\n",
+        "LIMIT 20"
+      ],
+      "columns": [
+        {
+          "displayName": "Revenue Gap (Billions)",
+          "description": "Total revenue gap converted to billions",
+          "expression": "`total_revenue_gap` / 1000000000"
+        }
+      ]
+    },
+    {
+      "name": "ea019936",
+      "displayName": "fact_claims",
+      "queryLines": [
+        "SELECT * FROM rcm_platform.rcm_gold.fact_claims"
+      ]
+    },
+    {
+      "name": "32251241",
+      "displayName": "kpi_by_state",
+      "queryLines": [
+        "SELECT * FROM rcm_platform.rcm_gold.kpi_by_state\r\n",
+        "ORDER BY total_revenue_gap DESC\r\n",
+        "LIMIT 10"
+      ]
+    },
+    {
+      "name": "a9e25ba2",
+      "displayName": "kpi_by_drg",
+      "queryLines": [
+        "SELECT * FROM rcm_platform.rcm_gold.kpi_by_drg\r\n",
+        "ORDER BY total_revenue_gap DESC\r\n",
+        "LIMIT 15"
+      ],
+      "columns": [
+        {
+          "displayName": "Revenue Gap (Billions)",
+          "description": "Total revenue gap in billions",
+          "expression": "`total_revenue_gap` / 1000000000"
+        }
+      ]
+    },
+    {
+      "name": "199c9cd6",
+      "displayName": "ar_aging_buckets",
+      "queryLines": [
+        "SELECT * FROM rcm_platform.rcm_gold.ar_aging_buckets"
+      ],
+      "columns": [
+        {
+          "displayName": "Revenue at Risk (Billions)",
+          "description": "Revenue at risk converted to billions for easier visualization",
+          "expression": "`revenue_at_risk` / 1000000000"
+        }
+      ]
+    },
+    {
+      "name": "6ce5bc68",
+      "displayName": "hospital_scorecard",
+      "queryLines": [
+        "SELECT * FROM rcm_platform.rcm_gold.hospital_scorecard"
+      ]
+    },
+    {
+      "name": "52c4fb79",
+      "displayName": "denial_risk_scores",
+      "queryLines": [
+        "SELECT * FROM rcm_platform.rcm_gold.denial_risk_scores"
+      ]
+    },
+    {
+      "name": "kpi_summary",
+      "displayName": "KPI Summary",
+      "queryLines": [
+        "SELECT\n",
+        "  SUM(hospital_count) as total_hospitals,\n",
+        "  SUM(total_discharges) as total_claims,\n",
+        "  AVG(avg_revenue_gap_pct) as avg_gap_pct,\n",
+        "  AVG(underpayment_rate_pct) as avg_underpayment_rate,\n",
+        "  SUM(total_revenue_gap) as total_revenue_gap\n",
+        "FROM\n",
+        "  rcm_platform.rcm_gold.kpi_by_state"
+      ],
+      "catalog": "rcm_platform",
+      "schema": "rcm_gold"
+    },
+    {
+      "name": "ar_aging",
+      "displayName": "AR Aging Analysis",
+      "queryLines": [
+        "SELECT\n",
+        "  *\n",
+        "FROM\n",
+        "  ar_aging_buckets\n",
+        "ORDER BY\n",
+        "  aging_bucket_order"
+      ],
+      "catalog": "rcm_platform",
+      "schema": "rcm_gold"
+    },
+    {
+      "name": "hospital_perf",
+      "displayName": "Hospital Performance",
+      "queryLines": [
+        "SELECT\n",
+        "  *\n",
+        "FROM\n",
+        "  hospital_scorecard\n",
+        "ORDER BY\n",
+        "  total_revenue_gap DESC\n",
+        "LIMIT 25"
+      ],
+      "catalog": "rcm_platform",
+      "schema": "rcm_gold"
+    },
+    {
+      "name": "denial_risk_dist",
+      "displayName": "Denial Risk Distribution",
+      "queryLines": [
+        "SELECT\n",
+        "  risk_category,\n",
+        "  COUNT(*) as claim_count\n",
+        "FROM\n",
+        "  rcm_platform.rcm_gold.denial_risk_scores\n",
+        "GROUP BY\n",
+        "  risk_category"
+      ],
+      "catalog": "rcm_platform",
+      "schema": "rcm_gold"
+    }
+  ],
+  "pages": [
+    {
+      "name": "4f02a4f8",
+      "displayName": "RCM Performance Overview",
+      "layout": [
+        {
+          "widget": {
+            "name": "0dfc6a04",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "32251241",
+                  "fields": [
+                    {
+                      "name": "provider_state",
+                      "expression": "`provider_state`"
+                    },
+                    {
+                      "name": "total_revenue_gap",
+                      "expression": "`total_revenue_gap`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Revenue Gap by State ($)",
+                "showTitle": true,
+                "headerAlignment": "center"
+              },
+              "mark": {
+                "colors": [
+                  "#9AB8CF",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "provider_state",
+                  "displayName": "Provider State",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "total_revenue_gap",
+                  "axis": {
+                    "title": "Revenue Gap ($B)"
+                  },
+                  "displayName": "Revenue Gap",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 6,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "top-15-drgs-by-revenue-leakage",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "a9e25ba2",
+                  "fields": [
+                    {
+                      "name": "drg_description",
+                      "expression": "`drg_description`"
+                    },
+                    {
+                      "name": "Revenue Gap (Billions)",
+                      "expression": "`Revenue Gap (Billions)`"
+                    },
+                    {
+                      "name": "drg_code",
+                      "expression": "`drg_code`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Top 15 DRGs by Revenue Gap ($B)",
+                "showTitle": true,
+                "headerAlignment": "center"
+              },
+              "mark": {
+                "colors": [
+                  "#A3C4DB",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Revenue Gap (Billions)",
+                  "displayName": "Revenue Gap (Billions)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "drg_code",
+                  "displayName": "DRG Description",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x-reversed"
+                    }
+                  }
+                },
+                "label": {
+                  "show": false
+                },
+                "extra": [
+                  {
+                    "fieldName": "drg_description",
+                    "displayName": "drg_description"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 3,
+            "width": 6,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "d1f537ab",
+            "multilineTextboxSpec": {
+              "lines": [
+                "## <span style=\"text-align:center;display:block;\"><span style=\"font-size:24px\">RCM Performance Overview</span></span>"
+              ]
+            },
+            "specExtensions": {
+              "widgetBackgroundColor": {
+                "light": "#FFFFFF"
+              },
+              "widgetBorderColor": {
+                "light": "#FFFFFF"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 1
+          }
+        },
+        {
+          "widget": {
+            "name": "ar-aging-revenue-at-risk",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "199c9cd6",
+                  "fields": [
+                    {
+                      "name": "ar_aging_bucket",
+                      "expression": "`ar_aging_bucket`"
+                    },
+                    {
+                      "name": "sum(revenue_at_risk)",
+                      "expression": "SUM(`revenue_at_risk`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "AR Aging — Revenue at Risk",
+                "showTitle": true,
+                "headerAlignment": "center"
+              },
+              "mark": {
+                "colors": [
+                  "#AAC5DD",
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 2
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 3
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 4
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 5
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 6
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 7
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 8
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 9
+                  },
+                  {
+                    "themeColorType": "visualizationColors",
+                    "position": 10
+                  }
+                ]
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "ar_aging_bucket",
+                  "axis": {
+                    "title": "Aging Bucket"
+                  },
+                  "displayName": "ar_aging_bucket",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "custom-order",
+                      "orderedValues": [
+                        "0-30 days",
+                        "31-60 days",
+                        "61-90 days",
+                        "90+ days"
+                      ]
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(revenue_at_risk)",
+                  "format": {
+                    "type": "number-currency",
+                    "currencyCode": "USD",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    },
+                    "abbreviation": "compact"
+                  },
+                  "displayName": "Revenue at Risk",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 8,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "total-revenue-gap",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ea019936",
+                  "fields": [
+                    {
+                      "name": "sum(total_revenue_gap)",
+                      "expression": "SUM(`total_revenue_gap`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Total Revenue Gap",
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_revenue_gap)"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 10,
+            "y": 1,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "a1d949e5",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "6ce5bc68",
+                  "fields": [
+                    {
+                      "name": "count(*)",
+                      "expression": "COUNT(`*`)"
+                    },
+                    {
+                      "name": "rcm_health_grade",
+                      "expression": "`rcm_health_grade`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Hospital RCM Health Grades",
+                "showTitle": true,
+                "headerAlignment": "center"
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "count(*)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "axis": {
+                    "hideTitle": true
+                  }
+                },
+                "color": {
+                  "fieldName": "rcm_health_grade",
+                  "legend": {
+                    "title": "Health Grade",
+                    "position": "right",
+                    "hide": false,
+                    "hideTitle": true
+                  },
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "angle-reversed"
+                    },
+                    "mappings": [
+                      {
+                        "value": "D — Below Average",
+                        "color": "#F4BF57"
+                      },
+                      {
+                        "value": "C — Average",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 7
+                        }
+                      },
+                      {
+                        "value": "B — Good",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 8
+                        }
+                      },
+                      {
+                        "value": "F — Critical",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 10
+                        }
+                      }
+                    ]
+                  }
+                },
+                "label": {
+                  "show": true,
+                  "text": {
+                    "fieldName": "count(*)"
+                  }
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 8,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "total-claims-counter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_summary",
+                  "fields": [
+                    {
+                      "name": "sum(total_hospitals)",
+                      "expression": "SUM(`total_hospitals`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Total Hospitals",
+                "showTitle": true,
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_hospitals)",
+                  "displayName": "Total Hospitals"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 1,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "avg-gap-pct-counter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_summary",
+                  "fields": [
+                    {
+                      "name": "avg(avg_gap_pct)",
+                      "expression": "AVG(`avg_gap_pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Avg Revenue Gap %",
+                "showTitle": true,
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "avg(avg_gap_pct)",
+                  "format": {
+                    "type": "number-plain",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 2
+                    },
+                    "abbreviation": "none"
+                  },
+                  "displayName": "Avg Gap %"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 1,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "underpayment-rate-counter",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_summary",
+                  "fields": [
+                    {
+                      "name": "avg(avg_underpayment_rate)",
+                      "expression": "AVG(`avg_underpayment_rate`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Underpayment Rate",
+                "showTitle": true,
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "avg(avg_underpayment_rate)",
+                  "format": {
+                    "type": "number-plain",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 2
+                    },
+                    "abbreviation": "none"
+                  },
+                  "displayName": "Underpayment Rate"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 1,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "top-hospitals-table",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "hospital_perf",
+                  "fields": [
+                    {
+                      "name": "provider_name",
+                      "expression": "`provider_name`"
+                    },
+                    {
+                      "name": "provider_state",
+                      "expression": "`provider_state`"
+                    },
+                    {
+                      "name": "total_revenue_gap",
+                      "expression": "`total_revenue_gap`"
+                    },
+                    {
+                      "name": "total_discharges",
+                      "expression": "`total_discharges`"
+                    },
+                    {
+                      "name": "rcm_health_grade",
+                      "expression": "`rcm_health_grade`"
+                    },
+                    {
+                      "name": "rcm_health_score",
+                      "expression": "`rcm_health_score`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "rowsPerPage": 25,
+              "frame": {
+                "title": "Top 25 Hospitals by Revenue Gap",
+                "showTitle": true,
+                "headerAlignment": "center"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "provider_name",
+                    "displayName": "Hospital Name"
+                  },
+                  {
+                    "fieldName": "provider_state",
+                    "displayName": "State"
+                  },
+                  {
+                    "fieldName": "total_revenue_gap",
+                    "displayName": "Revenue Gap"
+                  },
+                  {
+                    "fieldName": "total_discharges",
+                    "displayName": "Discharges"
+                  },
+                  {
+                    "fieldName": "rcm_health_grade",
+                    "displayName": "RCM Grade"
+                  },
+                  {
+                    "fieldName": "rcm_health_score",
+                    "displayName": "Health Score"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 14,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "ac6c6820",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "ea019936",
+                  "fields": [
+                    {
+                      "name": "sum(total_discharges)",
+                      "expression": "SUM(`total_discharges`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Total Medicare Discharges",
+                "showTitle": true,
+                "headerAlignment": "center"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_discharges)",
+                  "format": {
+                    "type": "number-plain",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    },
+                    "abbreviation": "compact"
+                  },
+                  "displayName": "Total Discharges"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 1,
+            "width": 4,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
