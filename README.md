@@ -18,7 +18,7 @@ CMS Medicare API → Bronze → Silver → Gold → ML → Dashboard → Streaml
 
 | Layer | Description |
 |---|---|
-| Bronze | Raw ingestion from CMS Inpatient API and Hospital CSV |
+| Bronze | Raw ingestion from CMS Medicare API — inpatient, outpatient, and HCAHPS datasets |
 | Silver | Type casting, 11 RCM features engineered, SCD Type 1/2 dimensions |
 | Gold | Star schema fact table, KPI aggregations, AR aging, hospital scorecard |
 | ML | Gradient Boosting denial risk model tracked in MLflow |
